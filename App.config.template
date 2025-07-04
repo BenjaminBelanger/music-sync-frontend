@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <appSettings>
+    <add key="CliendId" value="ENTER_VALUE"/>
+    <add key="RedirectUriPort" value="ENTER_VALUE"/>
+  </appSettings>
+</configuration>
