@@ -5,103 +5,56 @@ namespace music_sync_frontend.Services
 {
     public class TokenStorageService
     {
-        private const string AccessTokenSuffix = "_access";
-        private const string RefreshTokenSuffix = "_refresh";
+        private const string AccessTokenKey = "Spotify_Access_Token";
+        private const string RefreshTokenKey = "Spotify_Refresh_Token";
 
-        public void SaveTokens(string key, string accessToken, string refreshToken)
-        {
-            using var accessCred = new Credential
+        public void SaveTokens(string? accessToken, string? refreshToken)
+        {   
+            if (accessToken != null)
             {
-                Target = key + AccessTokenSuffix,
-                Username = "SpotifyAccessToken",
-                Password = accessToken,
-                PersistanceType = PersistanceType.LocalComputer
-            };
-            accessCred.Save();
-
-            using var refreshCred = new Credential
-            {
-                Target = key + RefreshTokenSuffix,
-                Username = "SpotifyRefreshToken",
-                Password = refreshToken,
-                PersistanceType = PersistanceType.LocalComputer
-            };
-            refreshCred.Save();
-        }
-
-        public (string? AccessToken, string? RefreshToken) GetTokens(string key)
-        {
-            string? accessToken = null;
-            string? refreshToken = null;
-
-            using (var accessCred = new Credential { Target = key + AccessTokenSuffix })
-            {
-                if (accessCred.Load())
-                {
-                    accessToken = accessCred.Password;
-                }
+                SaveToken(AccessTokenKey, accessToken);
             }
-
-            using (var refreshCred = new Credential { Target = key + RefreshTokenSuffix })
-            {
-                if (refreshCred.Load())
-                {
-                    refreshToken = refreshCred.Password;
-                }
-            }
-
-            return (accessToken, refreshToken);
-        }
-
-        public void DeleteTokens(string key)
-        {
-            using (var accessCred = new Credential { Target = key + AccessTokenSuffix })
-            {
-                accessCred.Delete();
-            }
-
-            using (var refreshCred = new Credential { Target = key + RefreshTokenSuffix })
-            {
-                refreshCred.Delete();
+            if (refreshToken != null) {
+                SaveToken(RefreshTokenKey, refreshToken);
             }
         }
 
-        public void SaveAccessToken(string key, string token)
+        public (string? AccessToken, string? RefreshToken) GetTokens()
         {
-            SaveToken(key + AccessTokenSuffix, token, "SpotifyAccessToken");
+            return (
+                GetToken(AccessTokenKey),
+                GetToken(RefreshTokenKey)
+            );
         }
 
-        public void SaveRefreshToken(string key, string token)
+        public void DeleteTokens()
         {
-            SaveToken(key + RefreshTokenSuffix, token, "SpotifyRefreshToken");
+            DeleteToken(AccessTokenKey);
+            DeleteToken(RefreshTokenKey);
         }
 
-        public string? GetAccessToken(string key)
-        {
-            return GetToken(key + AccessTokenSuffix);
-        }
-
-        public string? GetRefreshToken(string key)
-        {
-            return GetToken(key + RefreshTokenSuffix);
-        }
-
-        private void SaveToken(string fullKey, string token, string username)
+        private void SaveToken(string key, string token)
         {
             using var cred = new Credential
             {
-                Target = fullKey,
-                Username = username,
+                Target = key,
+                Username = "Token",
                 Password = token,
                 PersistanceType = PersistanceType.LocalComputer
             };
             cred.Save();
         }
 
-        private string? GetToken(string fullKey)
+        private string? GetToken(string key)
         {
-            using var cred = new Credential { Target = fullKey };
+            using var cred = new Credential { Target = key };
             return cred.Load() ? cred.Password : null;
+        }
+
+        private void DeleteToken(string key)
+        {
+            using var cred = new Credential { Target = key };
+            cred.Delete();
         }
     }
 }
