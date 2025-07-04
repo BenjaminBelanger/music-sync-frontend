@@ -3,7 +3,7 @@ using System;
 
 namespace music_sync_frontend.Services
 {
-    public class TokenStorageService
+    public class TokenStorageService : ITokenStorageService
     {
         private const string AccessTokenKey = "Spotify_Access_Token";
         private const string RefreshTokenKey = "Spotify_Refresh_Token";
