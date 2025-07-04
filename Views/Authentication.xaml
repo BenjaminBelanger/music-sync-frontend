@@ -7,10 +7,10 @@
         mc:Ignorable="d"
         Title="Authentication" Height="350" Width="525">
     <Grid>
-        <Button x:Name="button" HorizontalAlignment="Left" Content="Login to Spotify" Margin="18,22,0,0" VerticalAlignment="Top" Width="206" Height="46" Click="button_Click"
+        <Button x:Name="button" HorizontalAlignment="Left"  Content="Authenticate" Command="{Binding AuthenticateCommand}" Margin="18,22,0,0" VerticalAlignment="Top" Width="206" Height="46"
                 BorderThickness="0" Padding="0">
         </Button>
-        <TextBox x:Name="textBoxOutput" HorizontalAlignment="Left" Height="209" Margin="22,89,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="470"
+        <TextBox x:Name="textBoxOutput" HorizontalAlignment="Left" Height="209" Margin="22,89,0,0" Text="{Binding Output}" TextWrapping="Wrap" VerticalAlignment="Top" Width="470"
          IsReadOnly="True" ScrollViewer.VerticalScrollBarVisibility="Auto"
          />
     </Grid>
