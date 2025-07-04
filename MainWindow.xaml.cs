@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using music_sync_frontend.Views;
 
 namespace music_sync_frontend;
 
@@ -19,5 +20,11 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+    }
+
+    private void OpenSecondWindow_Click(object sender, RoutedEventArgs e)
+    {
+        Authentication auhtWindow = new Authentication();
+        auhtWindow.Show();
     }
 }
