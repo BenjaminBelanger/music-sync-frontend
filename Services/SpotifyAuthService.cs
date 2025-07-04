@@ -18,6 +18,12 @@ namespace music_sync_frontend.Services
         private readonly string redirectUri = $"http://{IPAddress.Loopback}:{ConfigurationManager.AppSettings["RedirectUriPort"]}/";
         private const string AuthorizationEndpoint = "https://accounts.spotify.com/authorize";
         private const string TokenEndpoint = "https://accounts.spotify.com/api/token";
+        private readonly ITokenStorageService _tokenStorage;
+
+        public SpotifyAuthService()
+        {
+            _tokenStorage = new TokenStorageService();
+        }
 
         public async Task<string> AuthenticateAsync()
         {
@@ -44,7 +50,8 @@ namespace music_sync_frontend.Services
 
                 if (string.IsNullOrEmpty(code)) return null;
 
-                return await ExchangeCodeForTokenAsync(code, codeVerifier);
+                var token = await ExchangeCodeForTokenAsync(code, codeVerifier);
+                return token;
             }
         }
 
@@ -66,8 +73,12 @@ namespace music_sync_frontend.Services
                 using var response = await request.GetResponseAsync();
                 using var reader = new StreamReader(response.GetResponseStream());
                 var json = await reader.ReadToEndAsync();
-                var token = JsonConvert.DeserializeObject<Dictionary<string, string>>(json)["access_token"];
-                return token;
+                var accessToken = JsonConvert.DeserializeObject<Dictionary<string, string>>(json)["access_token"];
+                var refreshToken = JsonConvert.DeserializeObject<Dictionary<string, string>>(json)["refresh_token"];
+
+                _tokenStorage.SaveTokens(accessToken, refreshToken);
+
+                return accessToken;
             }
             catch (WebException ex)
             {
