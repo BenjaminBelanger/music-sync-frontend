@@ -1,6 +1,6 @@
 # music-sync-frontend
 
-This a C# WPF application that I created to explore Spotify's API and its authentication flow using PKCE.
+This is a C# WPF application that I created to explore Spotify's API and its authentication flow using PKCE.
 
 The main purpose of this project is to enable real-time Spotify listening experience between users through a WebSocket server.
 
